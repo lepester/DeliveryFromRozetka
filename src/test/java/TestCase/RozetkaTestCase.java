@@ -10,9 +10,13 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 
 
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class RozetkaTestCase {
@@ -44,7 +48,7 @@ public class RozetkaTestCase {
         WebElement goToBeer = driver.findElement(By.xpath("//a[@href='https://rozetka.com.ua/pivo/c4626589/']"));
         goToBeer.click();
 
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
 
         WebElement yesAccept = driver.findElement(By.xpath("//a[@class='btn-link-i exponea-close']"));
@@ -58,17 +62,18 @@ public class RozetkaTestCase {
         WebElement acceptBuy = driver.findElement(By.xpath("//span[@class='buy-button__label']"));
         acceptBuy.click();
 
+            //Добавление еще двух товаров в корзину
+            //Добавление работает, но сайт не успевает сделать обработку
 
-        for (int i = 0; i < 2; i++) {
+      /*  for (int i = 0; i < 2; i++) {
             WebElement plusButton = driver.findElement(By.xpath("//button[@aria-label='Добавить ещё один товар']"));
             plusButton.click();
-            driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-
-        }
-
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        } */
 
 
-        WebElement orderYes = driver.findElement(By.xpath("//a[@href='https://rozetka.com.ua//checkout/']"));
+        WebElement orderYes = (new WebDriverWait(driver, Duration.ofSeconds(10))
+        .until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@href='https://rozetka.com.ua//checkout/']"))));     //driver.findElement(By.xpath("//a[@href='https://rozetka.com.ua//checkout/']"));
         orderYes.click();
 
 
@@ -94,8 +99,9 @@ public class RozetkaTestCase {
 
 
         WebElement enterPatronymic = driver.findElement(By.xpath("//input[@id='recipientPatronymic']"));
-        enterPatronymic.sendKeys("Бабабоевич");                                                                   //CAN'T RESOLVE
+        enterPatronymic.sendKeys("Бабабоевич");
 
-        //driver.quit();
+        driver.quit();
     }
+
 }
