@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class RozetkaTestCase {
 
 
-    @Test
+    @Test(invocationCount = 10)
     public void secondTCase() {
 
         System.setProperty("webdriver.chrome.driver", "browserDrivers/chromedriver.exe");
@@ -34,6 +34,7 @@ public class RozetkaTestCase {
 
         driver.get("https://rozetka.com.ua/");
         driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
 
         WebElement searchElement = driver.findElement(By.xpath("//button[@id='fat-menu']"));
@@ -48,9 +49,8 @@ public class RozetkaTestCase {
         WebElement goToBeer = driver.findElement(By.xpath("//a[@href='https://rozetka.com.ua/pivo/c4626589/']"));
         goToBeer.click();
 
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
-
+        WebDriverWait waitAccept = new WebDriverWait(driver, 10);
+        waitAccept.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@class='btn-link-i exponea-close']")));
         WebElement yesAccept = driver.findElement(By.xpath("//a[@class='btn-link-i exponea-close']"));
         yesAccept.click();
 
@@ -62,28 +62,29 @@ public class RozetkaTestCase {
         WebElement acceptBuy = driver.findElement(By.xpath("//span[@class='buy-button__label']"));
         acceptBuy.click();
 
-            //Добавление еще двух товаров в корзину
-            //Добавление работает, но сайт не успевает сделать обработку
 
-      /*  for (int i = 0; i < 2; i++) {
+        String preloaderXpath = "//div[contains(@class,'modal__preloader')]";
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(preloaderXpath)));
+
+        for (int i = 0; i < 2; i++) {
             WebElement plusButton = driver.findElement(By.xpath("//button[@aria-label='Добавить ещё один товар']"));
             plusButton.click();
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        } */
+        }
 
 
-        WebElement orderYes = (new WebDriverWait(driver, Duration.ofSeconds(10))
-        .until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@href='https://rozetka.com.ua//checkout/']"))));     //driver.findElement(By.xpath("//a[@href='https://rozetka.com.ua//checkout/']"));
-        orderYes.click();
+        WebDriverWait additionalProducts = new WebDriverWait(driver, 10);
+        additionalProducts.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(preloaderXpath)));
 
-
+        WebElement acceptYes = driver.findElement(By.xpath("//a[@href='https://rozetka.com.ua//checkout/']"));
+        acceptYes.click();
 
 
         WebElement enterSurname = driver.findElement(By.xpath("//input[@formcontrolname='surname']"));
         enterSurname.sendKeys("Гордон");
 
         WebElement enterName = driver.findElement(By.xpath("//input[@formcontrolname='name']"));
-        enterName.sendKeys("Дмитро");
+        enterName.sendKeys("Дмитрий");
 
         WebElement enterPhone = driver.findElement(By.xpath("//input[@formcontrolname='phone']"));
         enterPhone.sendKeys("0505218042");
@@ -94,12 +95,15 @@ public class RozetkaTestCase {
         WebElement chooseAdress = driver.findElement(By.xpath("//input[@id='searchPickupDelivery']"));
         chooseAdress.sendKeys("№5, ул. Ярослава Мудрого, 30/32");
 
+        WebDriverWait waitAdress = new WebDriverWait(driver, 10);
+        waitAdress.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='autocomplete__item']")));
+
         WebElement clickAdress = driver.findElement(By.xpath("//div[@class='autocomplete__item']"));
         clickAdress.click();
 
 
         WebElement enterPatronymic = driver.findElement(By.xpath("//input[@id='recipientPatronymic']"));
-        enterPatronymic.sendKeys("Бабабоевич");
+        enterPatronymic.sendKeys("Ильич");
 
         driver.quit();
     }
