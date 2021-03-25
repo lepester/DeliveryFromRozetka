@@ -16,13 +16,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 
+import java.lang.reflect.InvocationHandler;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class RozetkaTestCase {
 
 
-    @Test(invocationCount = 10)
+    @Test(invocationCount = 6)
     public void secondTCase() {
 
         System.setProperty("webdriver.chrome.driver", "browserDrivers/chromedriver.exe");
@@ -34,7 +35,7 @@ public class RozetkaTestCase {
 
         driver.get("https://rozetka.com.ua/");
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
 
         WebElement searchElement = driver.findElement(By.xpath("//button[@id='fat-menu']"));
